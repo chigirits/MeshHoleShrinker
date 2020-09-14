@@ -4,6 +4,8 @@
 
 Unity上でアバター頭部を他の素体に接合するとき、接合部にすきまが開いてしまうのを防ぐなどの用途に有用です。
 
+![demo](https://repository-images.githubusercontent.com/295406109/a2eb0680-f6d5-11ea-9672-da464eeef28f)
+
 ## 動作環境
 
 Unity 2018.4 以降
@@ -23,11 +25,13 @@ Unity 2018.4 以降
    "com.github.chigirits.MeshHoleShrinker": "https://github.com/chigirits/MeshHoleShrinker.git",
    ```
 
+こちらの方法でインポートした場合、以下の説明文中で示される本パッケージのプレハブやプリセットは `Assets/Chigiri/MeshHoleShrinker/...` 下ではなく `Packages/MeshHoleShrinker/Assets/Chigiri/MeshHoleShrinker/...` 下から選択してください。
+
 ## 使い方
 
 1. シーンにアバターを配置し、頭部以外を非表示にする
-2. 同シーンに `Prefabs/MeshHoleShrinker` を配置（一部後述の販売モデルはプリセットを利用できます）
-3. `MeshHoleShrinker` の `Target` に、アバター頭部の `SkinnedMeshRenderer` を指定
+2. プロジェクトタブから `Assets/Chigiri/MeshHoleShrinker/Prefabs/MeshHoleShrinker` を探し、同シーンに配置（後述の一部販売モデルはプリセットを利用できます）
+3. `MeshHoleShrinker` の `Target` に、アバター頭部の `SkinnedMeshRenderer`（一般的には `Body` オブジェクト）を指定
 4. `New Shape Key Name` に追加するシェイプキーの名前を指定
    
    ![usage-01](https://user-images.githubusercontent.com/61717977/93084783-88ae2a00-f6cf-11ea-8c92-a8433986f283.png)
@@ -50,7 +54,7 @@ Unity 2018.4 以降
 
 ### プリセットについて
 
-以下の販売モデルは、あらかじめ位置合わせ済みのプリセットを `Prefabs/Presets/` 下に用意しています。モデルのプレハブを未加工のまま原点に配置した状態で適用してください。
+以下の販売モデルは、あらかじめ位置合わせ済みのプリセットを `Assets/Chigiri/MeshHoleShrinker/Prefabs/Presets/` 下に用意しています。モデルのプレハブを未加工のまま原点に配置した状態で適用してください。
 
 - [みみの](https://booth.pm/ja/items/1336133)
 - [アーモンド](https://booth.pm/ja/items/2012982)
