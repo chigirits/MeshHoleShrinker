@@ -27,8 +27,8 @@ jobs:
           package-path: build/MeshHoleShrinker-${{ env.RELEASE_VERSION }}.unitypackage
           include-files: metaList
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
-        with:
-          name: unitypackage
-          path: build/MeshHoleShrinker-${{ env.RELEASE_VERSION }}.unitypackage
+      - name: Release
+        uses: fnkr/github-action-ghr@v1
+        env:
+          GHR_PATH: build/MeshHoleShrinker-${{ env.RELEASE_VERSION }}.unitypackage
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

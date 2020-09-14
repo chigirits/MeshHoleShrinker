@@ -4,6 +4,8 @@
 
 Unity上でアバター頭部を他の素体に接合するとき、接合部にすきまが開いてしまうのを防ぐなどの用途に有用です。
 
+![demo](https://repository-images.githubusercontent.com/295406109/a2eb0680-f6d5-11ea-9672-da464eeef28f)
+
 ## 動作環境
 
 Unity 2018.4 以降
