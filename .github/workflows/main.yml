@@ -19,7 +19,7 @@ jobs:
       - name: Prepare Build
         run: |
           mkdir build
-          find . -name \*.meta > metaList
+          find Assets -name \*.meta > metaList
 
       - name: create-unitypackage
         uses: pCYSl5EDgo/create-unitypackage@v1
