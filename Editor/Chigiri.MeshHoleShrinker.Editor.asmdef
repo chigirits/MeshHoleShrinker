@@ -1,0 +1,10 @@
+{
+	"name": "Chigiri.MeshHoleShrinker.Editor",
+    "references": [
+        "Chigiri.MeshHoleShrinker.Scripts"
+    ],
+	"includePlatforms": [
+		"Editor"
+	],
+    "autoReferenced": true
+}
