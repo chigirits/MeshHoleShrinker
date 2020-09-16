@@ -46,7 +46,7 @@ Unity 2018.4 以降
    ![usage-04](https://user-images.githubusercontent.com/61717977/93324199-88896800-f850-11ea-85b9-c7173f566ba7.png)
 
 
-   保存が完了すると、`Target` の SkinnedMeshRenderer に新しいメッシュがアタッチされ、選択状態になります。
+   保存が完了すると、`Target` の SkinnedMeshRenderer に新しいメッシュがアタッチされます。
    この差し替えられたメッシュに新しいシェイプキーがウェイト100で追加されていることを確認してください。
    
    ![usage-05](https://user-images.githubusercontent.com/61717977/93084798-8c41b100-f6cf-11ea-88b7-012b4444ccda.png)
@@ -71,7 +71,7 @@ Unity 2018.4 以降
 
 ## 注意事項
 
-- **Undo すると `Target` のメッシュが消える場合があります**。これは、複数回続けて `Process And Save As...` を行うと発生する現象で、直前に保存したメッシュを上書きすると上書き前のメッシュが復元できなくなるために起こります。通常は `Revert Target To Source Mesh` を押すことで適用前の状態に戻すことができます。
+- **Undo すると `Target` のメッシュが消える場合があります**。これは、複数回続けて `Process And Save As...` を行うと発生する現象で、直前に保存したメッシュを上書きすると上書き前のメッシュが復元できなくなるために起こります。通常は `Revert Target` を押すことで適用前の状態に戻すことができます。
 - **`Target` のスケール比率がすべての軸で等倍になっていない**場合、頂点の範囲を正常に特定できません。対象オブジェクトをヒエラルキーのルートに移動し、Scale を (1, 1, 1) にしてからお試しください。
 - 通常は楕円形に近い穴しかきれいに範囲指定できません（仕様です）。特殊な形状の穴を縮める際は、`Advanced > Use MeshCollider` にチェックを入れた上で、`MeshHoleShrinker` 内 `Cylinder` オブジェクトの `MeshCollider` および `MeshFilter` に指定されているメッシュを `Cube` 等の任意の形状に変更することで選択できる場合がありますが、素直に Blender で作業した方が確実かもしれません。
 - 法線の向きには影響がありません。
