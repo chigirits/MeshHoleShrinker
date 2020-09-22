@@ -4,7 +4,7 @@
 
 Unity上でアバター頭部を他の素体に接合するとき、接合部にすきまが開いてしまうのを防ぐなどの用途に有用です。
 
-![demo](https://repository-images.githubusercontent.com/295406109/a2eb0680-f6d5-11ea-9672-da464eeef28f)
+![image](https://repository-images.githubusercontent.com/295406109/4b4c2c80-fccd-11ea-8092-23c8dc4f2910)
 
 ## 動作環境
 
@@ -49,7 +49,7 @@ Unity 2018.4 以降
    保存が完了すると、`Target` の SkinnedMeshRenderer に新しいメッシュがアタッチされます。
    この差し替えられたメッシュに新しいシェイプキーがウェイト100で追加されていることを確認してください。
    
-   ![usage-05](https://user-images.githubusercontent.com/61717977/93084798-8c41b100-f6cf-11ea-88b7-012b4444ccda.png)
+   ![usage-05](https://repository-images.githubusercontent.com/295406109/a2eb0680-f6d5-11ea-9672-da464eeef28f)
    
    このとき、穴が均一に縮んでいないなど期待した結果と異なる場合は Undo して 5. からやり直してください。必要な頂点がすべて含まれていないと円形に縮まず、余計な頂点が含まれていると捻じれが起こりやすいです。
 
