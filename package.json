@@ -1,7 +1,7 @@
 {
     "name": "com.github.chigirits.meshholeshrinker",
     "displayName": "MeshHoleShrinker",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "unity": "2018.4",
     "description": "Create a new shape key to shrink the hole on your mesh.",
     "keywords": ["mesh", "blendshape"],

@@ -24,7 +24,6 @@ namespace Chigiri.MeshHoleShrinker.Editor
 
         SkinnedMeshRenderer prevTargetRenderer;
         bool isAdvancedOpen;
-        Collider collider;
         float sqrEpsilon;
 
         [MenuItem("Chigiri/Create MeshHoleShrinker")]
@@ -89,7 +88,7 @@ namespace Chigiri.MeshHoleShrinker.Editor
 
             if (error != "")
             {
-                EditorGUILayout.HelpBox(Chomp(error), MessageType.Error, true);
+                EditorGUILayout.HelpBox(Helper.Chomp(error), MessageType.Error, true);
             }
 
             var isRevertTargetEnable = self.targetRenderer != null && self.sourceMesh != null;
@@ -166,18 +165,6 @@ namespace Chigiri.MeshHoleShrinker.Editor
             get { return target as MeshHoleShrinker; }
         }
 
-        static string SanitizeFileName(string name)
-        {
-            var reg = new Regex("[\\/:\\*\\?<>\\|\\\"]");
-            return reg.Replace(name, "_");
-        }
-
-        static string Chomp(string s)
-        {
-            if (s.EndsWith("\n")) return s.Substring(0, s.Length - 1);
-            return s;
-        }
-
         void DoProcess()
         {
             // 新しいメッシュを作成
@@ -187,10 +174,13 @@ namespace Chigiri.MeshHoleShrinker.Editor
             resultMesh.name = self.sourceMesh.name + ".HoleShrinkable";
 
             // 保存ダイアログを表示
-            string dir = AssetDatabase.GetAssetPath(self.targetRenderer.sharedMesh);
+            string dir = self._lastSavedPath;
+            if (dir == "") dir = AssetDatabase.GetAssetPath(self.targetRenderer.sharedMesh);
             if (dir == "") dir = AssetDatabase.GetAssetPath(self.sourceMesh);
             dir = dir == "" ? "Assets" : Path.GetDirectoryName(dir);
-            string path = EditorUtility.SaveFilePanel("Save the new mesh as", dir, SanitizeFileName(resultMesh.name), "asset");
+            var newName = Path.GetFileName(self._lastSavedPath);
+            if (newName == "") newName = resultMesh.name;
+            string path = EditorUtility.SaveFilePanel("Save the new mesh as", dir, Helper.SanitizeFileName(newName), "asset");
             if (path.Length == 0) return;
 
             // 保存
@@ -202,6 +192,7 @@ namespace Chigiri.MeshHoleShrinker.Editor
             path = path.Replace(Application.dataPath, "Assets");
             AssetDatabase.CreateAsset(resultMesh, path);
             Debug.Log("Asset exported: " + path);
+            self._lastSavedPath = path;
 
             // Targetのメッシュを差し替えてシェイプキーのウェイトを設定
             Undo.RecordObject(self.targetRenderer, "Process (MeshHoleShrinker)");
@@ -211,7 +202,7 @@ namespace Chigiri.MeshHoleShrinker.Editor
             // Selection.activeGameObject = self.targetRenderer.gameObject;
         }
 
-        bool HitTest(Vector3 p)
+        bool HitTest(Collider collider, Vector3 p)
         {
             Vector3 q;
 
@@ -221,77 +212,13 @@ namespace Chigiri.MeshHoleShrinker.Editor
                 return (q - p).sqrMagnitude < sqrEpsilon;
             }
 
-            q = self.transform.InverseTransformPoint(p);
+            q = collider.transform.InverseTransformPoint(p);
             if (1f < Mathf.Abs(q.y)) return false;
             return Mathf.Sqrt(q.x * q.x + q.z * q.z) <= 0.5f;
         }
 
-        // From https://forum.unity.com/threads/bakemesh-scales-wrong.442212/#post-2860559
-        static Mesh GetPosedMesh(SkinnedMeshRenderer skin)
-        {
-            float MIN_VALUE = 0.00001f;
-
-            Mesh mesh = new Mesh();
-            Mesh sharedMesh = skin.sharedMesh;
-
-            GameObject root = skin.gameObject;
-
-            Vector3[] vertices = sharedMesh.vertices;
-            Matrix4x4[] bindposes = sharedMesh.bindposes;
-            BoneWeight[] boneWeights = sharedMesh.boneWeights;
-            Transform[] bones = skin.bones;
-            Vector3[] newVert = new Vector3[vertices.Length];
-
-            Vector3 localPt;
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                BoneWeight bw = boneWeights[i];
-
-                if (Mathf.Abs(bw.weight0) > MIN_VALUE)
-                {
-                    localPt = bindposes[bw.boneIndex0].MultiplyPoint3x4(vertices[i]);
-                    newVert[i] +=
-                        root.transform.InverseTransformPoint
-                            (
-                        bones[bw.boneIndex0].transform.localToWorldMatrix.MultiplyPoint3x4(localPt)) * bw.weight0;
-                }
-                if (Mathf.Abs(bw.weight1) > MIN_VALUE)
-                {
-                    localPt = bindposes[bw.boneIndex1].MultiplyPoint3x4(vertices[i]);
-                    newVert[i] +=
-                        root.transform.InverseTransformPoint
-                            (
-                        bones[bw.boneIndex1].transform.localToWorldMatrix.MultiplyPoint3x4(localPt)) * bw.weight1;
-                }
-                if (Mathf.Abs(bw.weight2) > MIN_VALUE)
-                {
-                    localPt = bindposes[bw.boneIndex2].MultiplyPoint3x4(vertices[i]);
-                    newVert[i] += root.transform.InverseTransformPoint
-                        (
-                        bones[bw.boneIndex2].transform.localToWorldMatrix.MultiplyPoint3x4(localPt)) * bw.weight2;
-                }
-                if (Mathf.Abs(bw.weight3) > MIN_VALUE)
-                {
-                    localPt = bindposes[bw.boneIndex3].MultiplyPoint3x4(vertices[i]);
-                    newVert[i] +=
-                        root.transform.InverseTransformPoint
-                            (
-                        bones[bw.boneIndex3].transform.localToWorldMatrix.MultiplyPoint3x4(localPt)) * bw.weight3;
-                }
-
-            }
-
-            mesh.vertices = newVert;
-            mesh.triangles = skin.sharedMesh.triangles;
-            mesh.RecalculateBounds();
-            return mesh;
-        }
-
-
         Mesh AddBlendShape(Mesh baseMesh)
         {
-            collider = self.transform.Find("Cylinder").GetComponent<MeshCollider>();
             sqrEpsilon = self.epsilon * self.epsilon;
 
             // SkinnedMeshRenderer の現在の形状を MeshRenderer に変換
@@ -300,34 +227,47 @@ namespace Chigiri.MeshHoleShrinker.Editor
             snapshot.transform.position = self.targetRenderer.transform.position;
             snapshot.transform.rotation = self.targetRenderer.transform.rotation;
             snapshot.transform.localScale = self.targetRenderer.transform.lossyScale;
-            var snapshotMesh = GetPosedMesh(self.targetRenderer);
+            var snapshotMesh = Helper.GetPosedMesh(self.targetRenderer, self.sourceMesh);
             snapshot.sharedMesh = snapshotMesh;
 
             // 範囲内の点群の中心座標を算出
-            var center = Vector3.zero;
-            var pointNum = 0;
-            for (var j = 0; j < baseMesh.vertexCount; j++)
+            var colliders = self.transform.GetComponentsInChildren<MeshCollider>();
+            var centers = new Vector3[colliders.Length];
+            for (var i = 0; i < colliders.Length; i++)
             {
-                var p = snapshot.transform.TransformPoint(snapshotMesh.vertices[j]);
-                if (HitTest(p))
+                var collider = colliders[i];
+                Debug.Log(collider.transform.name);
+                var center = Vector3.zero;
+                var pointNum = 0;
+                for (var j = 0; j < baseMesh.vertexCount; j++)
                 {
-                    center += baseMesh.vertices[j];
-                    pointNum++;
+                    var p = snapshot.transform.TransformPoint(snapshotMesh.vertices[j]);
+                    if (HitTest(collider, p))
+                    {
+                        center += baseMesh.vertices[j];
+                        pointNum++;
+                    }
                 }
+                if (0 < pointNum) center /= pointNum;
+                centers[i] = center;
             }
-            if (0 < pointNum) center /= pointNum;
 
             // 新しいシェイプキーを作成
             Mesh ret = Instantiate(baseMesh);
             ret.name = baseMesh.name;
             var src = Instantiate(ret);
             var vertices = new Vector3[baseMesh.vertexCount];
-            for (var j = 0; j < baseMesh.vertexCount; j++)
+            for (var i = 0; i < colliders.Length; i++)
             {
-                var p = snapshot.transform.TransformPoint(snapshotMesh.vertices[j]);
-                if (HitTest(p))
+                var collider = colliders[i];
+                var center = centers[i];
+                for (var j = 0; j < baseMesh.vertexCount; j++)
                 {
-                    vertices[j] = (center - baseMesh.vertices[j]) * (1f - self.scale) + self.offset;
+                    var p = snapshot.transform.TransformPoint(snapshotMesh.vertices[j]);
+                    if (HitTest(collider, p))
+                    {
+                        vertices[j] += (center - baseMesh.vertices[j]) * (1f - self.scale) + self.offset;
+                    }
                 }
             }
             ret.AddBlendShapeFrame(self.newName, 100f, vertices, null, null);
