@@ -22,7 +22,7 @@ Unity 2018.4 以降
 2. `dependencies` オブジェクト内に以下の要素を追加
    
    ```
-   "com.github.chigirits.MeshHoleShrinker": "https://github.com/chigirits/MeshHoleShrinker.git",
+   "com.github.chigirits.meshholeshrinker": "https://github.com/chigirits/MeshHoleShrinker.git",
    ```
 
 こちらの方法でインポートした場合、以下の説明文中で示される本パッケージのプレハブやプリセットは `Assets/Chigiri/MeshHoleShrinker/...` 下ではなく `Packages/MeshHoleShrinker/Assets/Chigiri/MeshHoleShrinker/...` 下から選択してください。
