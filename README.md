@@ -61,9 +61,10 @@ Unity 2018.4 以降
 
 以下の販売モデルは、あらかじめ位置合わせ済みのプリセットを `Assets/Chigiri/MeshHoleShrinker/Prefabs/Presets/` 下に用意しています。モデルのプレハブを未加工のまま原点に配置した状態で適用してください。
 
-- [みみの](https://booth.pm/ja/items/1336133)
-- [アーモンド](https://booth.pm/ja/items/2012982)
-- [メープル](https://booth.pm/ja/items/1948102)
+- [みみの v1.0.1](https://booth.pm/ja/items/1336133)
+- [アーモンド v1.01](https://booth.pm/ja/items/2012982)
+- [メープル v1.1](https://booth.pm/ja/items/1948102)
+- [まき菜 v1.3 PC版](https://booth.pm/ja/items/1748933)
 
 他のモデルについては、各自 **ご自分のモデルへの適用時の `Transform` コンポーネントのスクリーンショットを [#MeshHoleShrinker](https://twitter.com/search?q=%23MeshHoleShrinker&src=typed_query) タグで Twitter に共有** することをおすすめします。
 
