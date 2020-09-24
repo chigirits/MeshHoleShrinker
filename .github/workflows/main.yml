@@ -18,12 +18,49 @@ jobs:
 
       - name: Prepare Build
         run: |
-          mkdir build
-          find Assets -name \*.meta > metaList
+          mkdir -p project/Assets/Chigiri/MeshHoleShrinker build
+          cp -a {Editor,Materials,Prefabs,Scripts,README.md}{,.meta} LICENSE project/Assets/Chigiri/MeshHoleShrinker/
+
+          cat <<EOT >project/Assets/Chigiri.meta
+          fileFormatVersion: 2
+          guid: e9cc3dda85f79b140bbf7d079362bf77
+          folderAsset: yes
+          DefaultImporter:
+            externalObjects: {}
+            userData: 
+            assetBundleName: 
+            assetBundleVariant: 
+          EOT
+
+          cat <<EOT >project/Assets/Chigiri/MeshHoleShrinker.meta
+          fileFormatVersion: 2
+          guid: e9cc3dda85f79b140bbf7d079362bf77
+          folderAsset: yes
+          DefaultImporter:
+            externalObjects: {}
+            userData: 
+            assetBundleName: 
+            assetBundleVariant: 
+          EOT
+
+          cat <<EOT >project/Assets/Chigiri/MeshHoleShrinker/LICENSE.meta
+          fileFormatVersion: 2
+          guid: 71caf702a2804744998175de7cd24991
+          DefaultImporter:
+            externalObjects: {}
+            userData: 
+            assetBundleName: 
+            assetBundleVariant: 
+          EOT
+
+          cd project
+          find Assets -name \*.meta > ../metaList
+          cd ..
 
       - name: create-unitypackage
         uses: pCYSl5EDgo/create-unitypackage@v1
         with:
+          project-folder: ./project/
           package-path: build/MeshHoleShrinker-${{ env.RELEASE_VERSION }}.unitypackage
           include-files: metaList
 

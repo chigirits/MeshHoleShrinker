@@ -13,6 +13,8 @@ namespace Chigiri.MeshHoleShrinker
         public float epsilon = 1e-3f;
         public bool useMeshCollider = false;
         public GameObject meshSnapshotPrefab;
+
+        public string _lastSavedPath;
     }
 
 }
